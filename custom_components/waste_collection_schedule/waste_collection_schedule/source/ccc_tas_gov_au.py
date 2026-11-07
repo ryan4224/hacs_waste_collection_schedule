@@ -40,7 +40,7 @@ def _describe(record: dict, source: Any):
         return
     dates = re.findall(DATE_REGEX, record["value"])
     # Anything but two dates means the API has changed.
-    if len(dates) != 2:
+    if len(dates) != 2 and record["value"] != "":
         raise ValueError("Data has changed, api processor needs to be updated")
     first, second = (
         datetime.datetime.strptime(value, "%d/%m/%Y").date() for value in dates
@@ -61,6 +61,7 @@ class Source(BaseSource):
     TEST_CASES: ClassVar[dict] = {
         "80 Clarence St": {"address": "80 Clarence St"},
         "5 Cambridge Road": {"address": "5 Cambridge Road"},
+        "2 Estate Drive": {"address": "2 Estate Drive"},
     }
 
     PARAMS = (street_address(),)
